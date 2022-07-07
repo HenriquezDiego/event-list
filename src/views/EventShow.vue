@@ -1,5 +1,5 @@
 <template>
-  <h1>Events Show {{ id }}</h1>
+  <h2>Events Show {{ id }}</h2>
 </template>
 <script>
 export default {
