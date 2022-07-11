@@ -17,9 +17,9 @@ export default new Vuex.Store({
       "community",
     ],
     events: [],
+    event: {},
     totalPages: 0,
   },
-  getters: {},
   mutations: {
     ADD_EVENT(state, event) {
       state.events.push(event);
@@ -29,6 +29,9 @@ export default new Vuex.Store({
     },
     SET_TOTALPAGE(state, count) {
       state.totalPages = count;
+    },
+    SET_EVENT(state, event) {
+      state.event = event;
     },
   },
   actions: {
@@ -48,6 +51,23 @@ export default new Vuex.Store({
         .catch((error) => {
           console.log(error);
         });
+    },
+    getEvent({ commit, getters }, id) {
+      let event = getters.getEventById(id);
+      if (event) {
+        commit("SET_EVENT", event);
+      } else {
+        EventService.getEvent(id)
+          .then((response) => {
+            commit("SET_EVENT", response.data);
+          })
+          .catch((error) => console.log(error));
+      }
+    },
+  },
+  getters: {
+    getEventById: (state) => (id) => {
+      return state.events.find((e) => e.id === id);
     },
   },
   modules: {},
