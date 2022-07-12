@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import EventService from "@/services/EventService.js";
+import * as notification from "@/store/modules/notification.js";
 
 Vue.use(Vuex);
 
@@ -40,7 +41,7 @@ export default new Vuex.Store({
         commit("ADD_EVENT", event);
       });
     },
-    getEvents({ commit }, { perPage, page }) {
+    getEvents({ commit, dispatch }, { perPage, page }) {
       EventService.getEvents(perPage, page)
         .then((response) => {
           let totalEvents = response.headers["x-total-count"];
@@ -49,10 +50,14 @@ export default new Vuex.Store({
           commit("SET_EVENTS", response.data);
         })
         .catch((error) => {
-          console.log(error);
+          const notification = {
+            type: "error",
+            message: "There was a problem fetching events: " + error.message,
+          };
+          dispatch("notification/add", notification, { root: true });
         });
     },
-    getEvent({ commit, getters }, id) {
+    getEvent({ commit, getters, dispatch }, id) {
       let event = getters.getEventById(id);
       if (event) {
         commit("SET_EVENT", event);
@@ -61,7 +66,13 @@ export default new Vuex.Store({
           .then((response) => {
             commit("SET_EVENT", response.data);
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            const notification = {
+              type: "error",
+              message: "There was a problem fetching event: " + error.message,
+            };
+            dispatch("notification/add", notification, { root: true });
+          });
       }
     },
   },
@@ -70,5 +81,7 @@ export default new Vuex.Store({
       return state.events.find((e) => e.id === id);
     },
   },
-  modules: {},
+  modules: {
+    notification,
+  },
 });
