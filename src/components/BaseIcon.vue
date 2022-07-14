@@ -38,7 +38,7 @@ export default {
   color: rgba(0, 0, 0, 0.4);
   font-size: 1rem;
   font-weight: 600;
-  margin-right: 5px;
+  margin-right: 7px;
 }
 .icon {
   stroke: currentColor;
