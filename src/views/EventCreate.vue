@@ -84,7 +84,13 @@ export default {
           this.event = this.createFreshEventObject();
         })
         .catch((error) => {
-          console.log(error);
+          const notification = {
+            type: "error",
+            message: "There was a problem fetching events: " + error.message,
+          };
+          this.$store.dispatch("notification/add", notification, {
+            root: true,
+          });
         });
     },
     createFreshEventObject() {
